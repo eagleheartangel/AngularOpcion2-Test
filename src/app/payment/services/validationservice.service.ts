@@ -10,12 +10,16 @@ export class ValidationService {
 
   validateDate(control: AbstractControl): ValidationErrors | null {
     let inputValue = control.value;
+
+    // Eliminar espacios en blanco y barras diagonales si están presentes
+    inputValue = inputValue.replace(/\s+/g, '').replace('/', '');
+
     if (!inputValue) return null;
-    if (inputValue.length > 0) {
-      inputValue.trim();
-      inputValue = inputValue.replace('/', '');
+
+    // Validar que la longitud de la entrada sea de exactamente 4 caracteres (MMYY)
+    if (inputValue.length !== 4) {
+      return { invalidFormat: true };
     }
-    console.log(inputValue);
 
     // Validar el mes
     const month = parseInt(inputValue.substring(0, 2), 10);
@@ -23,16 +27,20 @@ export class ValidationService {
       return { invalidMonth: true };
     }
 
-    // validar fecha actual
-    const currentDate = new Date();
+    // Obtener el año actual en formato de dos dígitos (YY)
+    const currentYear = new Date().getFullYear() % 100;
+
+    // Obtener el año de expiración en formato de dos dígitos (YY)
     const year = parseInt(inputValue.substring(2, 4), 10);
-    const currentYear = currentDate.getFullYear() % 100;
-    if (
-      year < currentYear ||
-      (year === currentYear && month < currentDate.getMonth() + 1) // validamos con el mes
-    ) {
+
+    // Calcular el año límite superior para la tarjeta (20 años en el futuro)
+    const upperLimitYear = currentYear + 20;
+
+    // Validar que el año de expiración esté dentro del rango permitido
+    if (year < currentYear || year > upperLimitYear) {
       return { cardExpired: true };
     }
+
     return null;
   }
 }
