@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import {
   UntypedFormBuilder,
   UntypedFormGroup,
@@ -15,6 +15,23 @@ import { ValidationService } from '../../services/validationservice.service';
 export class PaymentComponent {
   confirmScreen!: boolean;
   faCcVisa = faCcVisa;
+
+  @HostListener('input', ['$event']) onInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let inputValue = input.value;
+
+    // Remove all non-numeric characters
+    inputValue = inputValue.replace(/\D/g, '');
+
+    // Insert a space after the first two characters (month)
+    if (inputValue.length > 2) {
+      inputValue =
+        inputValue.substring(0, 2) + '    /    ' + inputValue.substring(2);
+    }
+
+    // Set the formatted value back to the input
+    input.value = inputValue;
+  }
 
   // Form
   paymentForm: UntypedFormGroup = this.formBuilder.group({
@@ -38,7 +55,12 @@ export class PaymentComponent {
     ],
     expiration: [
       '',
-      [Validators.required, Validators.minLength(3), Validators.maxLength(5)],
+      [
+        Validators.required,
+        Validators.minLength(11),
+        Validators.maxLength(13),
+        this.validationService.validateDate,
+      ],
     ],
     cvv: [
       '',
@@ -56,12 +78,16 @@ export class PaymentComponent {
     const errors = this.paymentForm.get(value)?.errors;
     if (errors?.['required']) {
       return `${value} required`;
+    } else if (errors?.['invalidMonth']) {
+      return `invalid month format`;
+    } else if (errors?.['cardExpired']) {
+      return `card expired`;
     } else if (errors?.['pattern']) {
       return 'invalid format';
     } else if (errors?.['minlength']) {
       return `must be at least ${errors?.['minlength']?.requiredLength} characters`;
     } else if (errors?.['maxlength']) {
-      return `must be maxium ${errors?.['maxlength']?.requiredLength} characters`;
+      return `must be maxium 4 characters`;
     }
 
     return '';
