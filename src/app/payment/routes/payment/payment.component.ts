@@ -58,7 +58,7 @@ export class PaymentComponent {
       '',
       [
         Validators.required,
-        Validators.minLength(11),
+        Validators.minLength(13),
         Validators.maxLength(13),
         this.validationService.validateDate,
       ],
@@ -86,7 +86,7 @@ export class PaymentComponent {
     } else if (errors?.['pattern']) {
       return 'invalid format';
     } else if (errors?.['minlength']) {
-      return `must be at least ${errors?.['minlength']?.requiredLength} characters`;
+      return `must be at least 4 characters`;
     } else if (errors?.['maxlength']) {
       return `must be maxium 4 characters`;
     }
