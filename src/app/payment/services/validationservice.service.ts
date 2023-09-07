@@ -22,23 +22,28 @@ export class ValidationService {
       return { invalidFormat: true };
     }
 
-    // Validar el mes
+    // Validar el mes a 12 meses
     const month = parseInt(inputValue.substring(0, 2), 10);
     if (month < 1 || month > 12) {
       return { invalidMonth: true };
     }
 
+    // Validar el mes independiente (adicional)
+    const date = new Date();
+
     // Obtener el año actual en formato de dos dígitos (YY)
-    const currentYear = new Date().getFullYear() % 100;
+    const currentYear = date.getFullYear() % 100;
+    const currentMonth = date.getMonth();
 
     // Obtener el año de expiración en formato de dos dígitos (YY)
     const year = parseInt(inputValue.substring(2, 4), 10);
 
     // Calcular el año límite superior para la tarjeta (20 años en el futuro)
     const upperLimitYear = currentYear + 20;
+    console.log(`mes: ${month}, mesActual: ${currentMonth}`);
 
     // Validar que el año de expiración esté dentro del rango permitido
-    if (year < currentYear || year > upperLimitYear) {
+    if (year < currentYear || year > upperLimitYear || month <= currentMonth) {
       return { cardExpired: true };
     }
 
