@@ -37,6 +37,7 @@
       class="w-full h-12 rounded-lg bg-[#126BC7] dark:bg-customD-first px-5"
       type="text"
       formControlName="name"
+      maxlength="31"
     />
     <p
       *ngIf="isvalid('name')"
@@ -59,6 +60,7 @@
         class="w-full h-12 rounded-lg shadow-2xl border-2 border-gray-200/25 bg-[#3E92EB] dark:bg-customD-first pl-5 pr-28"
         type="text"
         formControlName="number"
+        maxlength="16"
       />
     </div>
     <p
@@ -76,6 +78,8 @@
           class="w-full h-12 rounded-lg bg-[#126BC7] dark:bg-customD-first px-5 text-center"
           type="text"
           formControlName="expiration"
+          minlength="13"
+          maxlength="13"
         />
         <p
           *ngIf="isvalid('expiration')"
@@ -93,6 +97,8 @@
           class="w-full h-12 rounded-lg bg-[#126BC7] dark:bg-customD-first px-5"
           type="text"
           formControlName="cvv"
+          minlength="3"
+          maxlength="3"
         />
         <p
           *ngIf="isvalid('cvv')"
@@ -117,6 +123,10 @@
       >
         Cancel
       </button>
+      <!-- <div class="flex flex-row">
+        <span>cvv:</span>
+        <pre>{{ paymentForm.controls["cvv"].errors | json }}</pre>
+      </div> -->
       <!-- <div class="flex flex-col">
         <div class="flex flex-row">
           <span>Valid:</span>

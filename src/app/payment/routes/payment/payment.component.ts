@@ -42,7 +42,7 @@ export class PaymentComponent {
         Validators.required,
         Validators.pattern(this.validationService.letters),
         Validators.minLength(5),
-        Validators.maxLength(50),
+        Validators.maxLength(30),
       ],
     ],
     number: [
@@ -65,7 +65,7 @@ export class PaymentComponent {
     ],
     cvv: [
       '',
-      [Validators.required, Validators.minLength(2), Validators.maxLength(3)],
+      [Validators.required, Validators.minLength(3), Validators.maxLength(3)],
     ],
   });
 
@@ -85,10 +85,14 @@ export class PaymentComponent {
       return `card expired`;
     } else if (errors?.['pattern']) {
       return 'invalid format';
-    } else if (errors?.['minlength']) {
+    } else if (value != 'expiration' && errors?.['minlength']) {
+      return `must be at least ${errors?.['minlength'].requiredLength} characters`;
+    } else if (value != 'expiration' && errors?.['maxlength']) {
+      return `must be maxium ${errors?.['maxlength'].requiredLength} characters`;
+    } else if (value == 'expiration' && errors?.['minlength']) {
       return `must be at least 4 characters`;
-    } else if (errors?.['maxlength']) {
-      return `must be maxium 4 characters`;
+    } else if (value == 'expiration' && errors?.['maxlength']) {
+      return `must be at maxium 4 characters`;
     }
 
     return '';
