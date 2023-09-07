@@ -113,6 +113,7 @@ export class PaymentComponent {
   // Cancel button
   cancel() {
     this.paymentForm.reset();
+    this.paymentForm.get('cvv')?.value == '';
   }
 
   // Confirm Screen

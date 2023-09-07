@@ -10,6 +10,7 @@ export class ValidationService {
 
   validateDate(control: AbstractControl): ValidationErrors | null {
     let inputValue = control.value;
+    if (!inputValue) return null;
 
     // Eliminar espacios en blanco y barras diagonales si están presentes
     inputValue = inputValue.replace(/\s+/g, '').replace('/', '');
