@@ -19,18 +19,19 @@ export class PaymentComponent {
   @HostListener('input', ['$event']) onInput(event: Event): void {
     const input = event.target as HTMLInputElement;
     let inputValue = input.value;
+    if (input.id === 'expirationInput') {
+      // Remove all non-numeric characters
+      inputValue = inputValue.replace(/\D/g, '');
 
-    // Remove all non-numeric characters
-    inputValue = inputValue.replace(/\D/g, '');
+      // Insert a space after the first two characters (month)
+      if (inputValue.length > 2) {
+        inputValue =
+          inputValue.substring(0, 2) + '    /    ' + inputValue.substring(2);
+      }
 
-    // Insert a space after the first two characters (month)
-    if (inputValue.length > 2) {
-      inputValue =
-        inputValue.substring(0, 2) + '    /    ' + inputValue.substring(2);
+      // Set the formatted value back to the input
+      input.value = inputValue;
     }
-
-    // Set the formatted value back to the input
-    input.value = inputValue;
   }
 
   // Form
